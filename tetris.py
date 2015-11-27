@@ -62,6 +62,9 @@ class Board(wx.Panel):
     def setShapeAt(self, x, y, shape):
         self.board[(y * Board.BoardWidth) + x] = shape
 
+    def setTextAt(self, x, y, curPiece, index):
+        self.boardtxt[(y * Board.BoardWidth) + x] = curPiece.pieceText[index]
+
     def squareWidth(self):
         return self.GetClientSize().GetWidth() / Board.BoardWidth
 
@@ -99,8 +102,8 @@ class Board(wx.Panel):
     def clearBoard(self):
         for i in range(Board.BoardHeight * Board.BoardWidth):
             self.board.append(Tetrominoes.NoShape)
-        # for i in range(Board.BoardHeight * Board.BoardWidth):
-        #     self.boardtxt.append("Hi")
+        for i in range(Board.BoardHeight * Board.BoardWidth):
+            self.boardtxt.append("Hi")
 
 
     def OnPaint(self, event):
@@ -122,9 +125,9 @@ class Board(wx.Panel):
             for i in range(4):
                 x = self.curX + self.curPiece.x(i)
                 y = self.curY - self.curPiece.y(i)
-                self.drawSquare(dc, 0 + x * self.squareWidth(),
+                self.drawCurPieceSq(dc, 0 + x * self.squareWidth(),
                     boardTop + (Board.BoardHeight - y - 1) * self.squareHeight(),
-                    self.curPiece.shape())
+                    self.curPiece,i)
 
 
     def OnKeyDown(self, event):
@@ -182,6 +185,13 @@ class Board(wx.Panel):
 
 
     def pieceDropped(self):
+        '''
+        board finds piece at the bottom.
+        for each square of the Tetromino, compute x and y in board coordinates
+        and set the shape in stone on board
+        @@@ try to also set text here
+            @@@ or maybe in setShapeAt?
+        '''
         for i in range(4):
             x = self.curX + self.curPiece.x(i)
             y = self.curY - self.curPiece.y(i)
@@ -254,7 +264,6 @@ class Board(wx.Panel):
         self.Refresh()
         return True
 
-
     def drawSquare(self, dc, x, y, shape):
         colors = ['#000000', '#CC6666', '#66CC66', '#6666CC',
                   '#CCCC66', '#CC66CC', '#66CCCC', '#DAAA00']
@@ -287,9 +296,47 @@ class Board(wx.Panel):
         self.squareHeight() - 2)
 
         # dc.DrawText("Hi",x+1,y)
-        str1 = phony[random.randint(1, len(phony)-1)]+vowels[random.randint(1, len(vowels)-1)]
+        # str1 = phony[random.randint(1, len(phony)-1)]+vowels[random.randint(1, len(vowels)-1)]
+        str2 = self.boardtxt[y * Board.BoardWidth + x]
+        dc.DrawText(str2,x+1,y)
+
+    def drawCurPieceSq(self, dc, x, y, curPiece, index):
+        colors = ['#000000', '#CC6666', '#66CC66', '#6666CC',
+                  '#CCCC66', '#CC66CC', '#66CCCC', '#DAAA00']
+
+        light = ['#000000', '#F89FAB', '#79FC79', '#7979FC', 
+                 '#FCFC79', '#FC79FC', '#79FCFC', '#FCC600']
+
+        dark = ['#000000', '#803C3B', '#3B803B', '#3B3B80', 
+                 '#80803B', '#803B80', '#3B8080', '#806200']
+
+        shape = curPiece.shape()
+
+        pen = wx.Pen(light[shape])
+        pen.SetCap(wx.CAP_PROJECTING)
+        dc.SetPen(pen)
+
+        dc.DrawLine(x, y + self.squareHeight() - 1, x, y)
+        dc.DrawLine(x, y, x + self.squareWidth() - 1, y)
+
+        darkpen = wx.Pen(dark[shape])
+        darkpen.SetCap(wx.CAP_PROJECTING)
+        dc.SetPen(darkpen)
+
+        dc.DrawLine(x + 1, y + self.squareHeight() - 1,
+            x + self.squareWidth() - 1, y + self.squareHeight() - 1)
+        dc.DrawLine(x + self.squareWidth() - 1, 
+        y + self.squareHeight() - 1, x + self.squareWidth() - 1, y + 1)
+
+        dc.SetPen(wx.TRANSPARENT_PEN)
+        dc.SetBrush(wx.Brush(colors[shape]))
+        dc.DrawRectangle(x + 1, y + 1, self.squareWidth() - 2, 
+        self.squareHeight() - 2)
+
+        # dc.DrawText("Hi",x+1,y)
+        # str1 = phony[random.randint(1, len(phony)-1)]+vowels[random.randint(1, len(vowels)-1)]
         # str2 = self.boardtxt[y * Board.BoardWidth + x]
-        dc.DrawText(str1,x+1,y)
+        dc.DrawText(curPiece.pieceText[index],x+1,y)
 
 
 class Tetrominoes(object):
@@ -318,6 +365,7 @@ class Shape(object):
     def __init__(self):
         self.coords = [[0,0] for i in range(4)]
         self.pieceShape = Tetrominoes.NoShape
+        self.pieceText = ('1','2','3','4')
 
         self.setShape(Tetrominoes.NoShape)
 
