@@ -26,7 +26,7 @@ class Tetris(wx.Frame):
 
         self.Centre()
         self.Show(True)
-       
+
 
 class Board(wx.Panel):
     BoardWidth = 10
@@ -82,7 +82,7 @@ class Board(wx.Panel):
 
         self.newPiece()
         self.timer.Start(Board.Speed)
-        
+
     def pause(self):
         if not self.isStarted:
             return
@@ -108,11 +108,11 @@ class Board(wx.Panel):
 
     def OnPaint(self, event):
 
-        dc = wx.PaintDC(self)        
+        dc = wx.PaintDC(self)
 
         size = self.GetClientSize()
         boardTop = size.GetHeight() - Board.BoardHeight * self.squareHeight()
-        
+
         for i in range(Board.BoardHeight):
             for j in range(Board.BoardWidth):
                 shape = self.shapeAt(j, Board.BoardHeight - i - 1)
@@ -230,7 +230,7 @@ class Board(wx.Panel):
 
             if numFullLines > 0:
                 self.numLinesRemoved = self.numLinesRemoved + numFullLines
-                statusbar.SetStatusText(str(self.numLinesRemoved)) 
+                statusbar.SetStatusText(str(self.numLinesRemoved))
                 self.isWaitingAfterLine = True
                 self.curPiece.setShape(Tetrominoes.NoShape)
                 self.Refresh()
@@ -268,10 +268,10 @@ class Board(wx.Panel):
         colors = ['#000000', '#CC6666', '#66CC66', '#6666CC',
                   '#CCCC66', '#CC66CC', '#66CCCC', '#DAAA00']
 
-        light = ['#000000', '#F89FAB', '#79FC79', '#7979FC', 
+        light = ['#000000', '#F89FAB', '#79FC79', '#7979FC',
                  '#FCFC79', '#FC79FC', '#79FCFC', '#FCC600']
 
-        dark = ['#000000', '#803C3B', '#3B803B', '#3B3B80', 
+        dark = ['#000000', '#803C3B', '#3B803B', '#3B3B80',
                  '#80803B', '#803B80', '#3B8080', '#806200']
 
         pen = wx.Pen(light[shape])
@@ -287,27 +287,31 @@ class Board(wx.Panel):
 
         dc.DrawLine(x + 1, y + self.squareHeight() - 1,
             x + self.squareWidth() - 1, y + self.squareHeight() - 1)
-        dc.DrawLine(x + self.squareWidth() - 1, 
+        dc.DrawLine(x + self.squareWidth() - 1,
         y + self.squareHeight() - 1, x + self.squareWidth() - 1, y + 1)
 
         dc.SetPen(wx.TRANSPARENT_PEN)
         dc.SetBrush(wx.Brush(colors[shape]))
-        dc.DrawRectangle(x + 1, y + 1, self.squareWidth() - 2, 
+        dc.DrawRectangle(x + 1, y + 1, self.squareWidth() - 2,
         self.squareHeight() - 2)
 
-        # dc.DrawText("Hi",x+1,y)
-        # str1 = phony[random.randint(1, len(phony)-1)]+vowels[random.randint(1, len(vowels)-1)]
-        str2 = self.boardtxt[y * Board.BoardWidth + x]
+        boardTop = self.GetClientSize().GetHeight() - Board.BoardHeight * self.squareHeight()
+
+        actualX = x / self.squareWidth()
+        actualY = (y - boardTop) / self.squareHeight()
+        # self.shapeAt(j, Board.BoardHeight - i - 1)
+        # return self.board[(y * Board.BoardWidth) + x]
+        str2 = self.boardtxt[actualY * Board.BoardWidth + actualX]
         dc.DrawText(str2,x+1,y)
 
     def drawCurPieceSq(self, dc, x, y, curPiece, index):
         colors = ['#000000', '#CC6666', '#66CC66', '#6666CC',
                   '#CCCC66', '#CC66CC', '#66CCCC', '#DAAA00']
 
-        light = ['#000000', '#F89FAB', '#79FC79', '#7979FC', 
+        light = ['#000000', '#F89FAB', '#79FC79', '#7979FC',
                  '#FCFC79', '#FC79FC', '#79FCFC', '#FCC600']
 
-        dark = ['#000000', '#803C3B', '#3B803B', '#3B3B80', 
+        dark = ['#000000', '#803C3B', '#3B803B', '#3B3B80',
                  '#80803B', '#803B80', '#3B8080', '#806200']
 
         shape = curPiece.shape()
@@ -325,12 +329,12 @@ class Board(wx.Panel):
 
         dc.DrawLine(x + 1, y + self.squareHeight() - 1,
             x + self.squareWidth() - 1, y + self.squareHeight() - 1)
-        dc.DrawLine(x + self.squareWidth() - 1, 
+        dc.DrawLine(x + self.squareWidth() - 1,
         y + self.squareHeight() - 1, x + self.squareWidth() - 1, y + 1)
 
         dc.SetPen(wx.TRANSPARENT_PEN)
         dc.SetBrush(wx.Brush(colors[shape]))
-        dc.DrawRectangle(x + 1, y + 1, self.squareWidth() - 2, 
+        dc.DrawRectangle(x + 1, y + 1, self.squareWidth() - 2,
         self.squareHeight() - 2)
 
         # dc.DrawText("Hi",x+1,y)
