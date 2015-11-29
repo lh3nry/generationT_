@@ -62,8 +62,8 @@ class Board(wx.Panel):
     def setShapeAt(self, x, y, shape):
         self.board[(y * Board.BoardWidth) + x] = shape
 
-    def setTextAt(self, x, y, curPiece, index):
-        self.boardtxt[(y * Board.BoardWidth) + x] = curPiece.pieceText[index]
+    def setTextAt(self, x, y, text):
+        self.boardtxt[(y * Board.BoardWidth) + x] = text
 
     def squareWidth(self):
         return self.GetClientSize().GetWidth() / Board.BoardWidth
@@ -103,8 +103,7 @@ class Board(wx.Panel):
         for i in range(Board.BoardHeight * Board.BoardWidth):
             self.board.append(Tetrominoes.NoShape)
         for i in range(Board.BoardHeight * Board.BoardWidth):
-            self.boardtxt.append("Hi")
-
+            self.boardtxt.append('0')
 
     def OnPaint(self, event):
 
@@ -192,10 +191,13 @@ class Board(wx.Panel):
         @@@ try to also set text here
             @@@ or maybe in setShapeAt?
         '''
+
         for i in range(4):
             x = self.curX + self.curPiece.x(i)
             y = self.curY - self.curPiece.y(i)
+
             self.setShapeAt(x, y, self.curPiece.shape())
+            self.setTextAt(x, y, self.curPiece.text()[i])
 
         self.removeFullLines()
 
@@ -297,12 +299,13 @@ class Board(wx.Panel):
 
         boardTop = self.GetClientSize().GetHeight() - Board.BoardHeight * self.squareHeight()
 
-        actualX = x / self.squareWidth()
-        actualY = (y - boardTop) / self.squareHeight()
-        # self.shapeAt(j, Board.BoardHeight - i - 1)
-        # return self.board[(y * Board.BoardWidth) + x]
-        str2 = self.boardtxt[actualY * Board.BoardWidth + actualX]
-        dc.DrawText(str2,x+1,y)
+        boardX = x / self.squareWidth()
+        boardY = (y - boardTop) / self.squareHeight()
+
+        newY = Board.BoardHeight - 1 - boardY
+
+        strToDraw = self.boardtxt[newY * Board.BoardWidth + boardX]
+        dc.DrawText(strToDraw, x + 1, y)
 
     def drawCurPieceSq(self, dc, x, y, curPiece, index):
         colors = ['#000000', '#CC6666', '#66CC66', '#6666CC',
@@ -375,6 +378,9 @@ class Shape(object):
 
     def shape(self):
         return self.pieceShape
+
+    def text(self):
+        return self.pieceText
 
     def setShape(self, shape):
         table = Shape.coordsTable[shape]
