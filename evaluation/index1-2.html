@@ -8,21 +8,39 @@
     <script src="js/script.js"></script>
   </head>
   <body>
-    <div id="phase1" container>
-      <h2>Enter Your password 5 times</h2>
-      <form>
-        <p><input type="text" name="pw1"></p>
-        <p><input type="text" name="pw2"></p>
-        <p><input type="text" name="pw3"></p>
-        <p><input type="text" name="pw4"></p>
-        <p><input type="text" name="pw5"></p>
-        <button type="submit" name="button">Submit</button>
-        <p id="error-text" class="input--help">Please make sure entered passwords are identical.</p>
-      </form>
+    <div id="phase0" container>
+      <h2>Enter user generated password</h2>
+      <p><input type="text"></p>
+      <button class="advance-button">Next</button>
     </div>
 
-    <div id="thanks" container>
-      <h2>Thanks your password is: <span id="user-password"></span></h2>
+    <div id="phase1" container>
+      <h2>Enter Your password correctly 3 times in a row</h2>
+      <form>
+        <p><input type="text"></p>
+        <p class="input--help error">Password is incorrect. Please try again.</p>
+        <p class="input--help count">You have entered your password <span id="num-times">0</span> times in a row.</p>
+        <button>Submit</button>
+      </form>
+      <button id="phase1-advance" class="advance-button">Next</button>
     </div>
+
+    <div id="phase2" container>
+      <h2>Go play with puzzle.</h2>
+      <p>Note: Pass laptop to tester. Timer starts immediately on next screen</p>
+      <button class="advance-button">Next</button>
+    </div>
+
+    <div id="phase3" container>
+      <h2>Please enter your password</h2>
+      <form>
+        <p><input type="text"></p>
+        <button>Submit</button>
+        <p class="input--help">Password is incorrect. Please try again.</p>
+      </form>
+      <!-- <button class="advance-button">Next</button> -->
+    </div>
+
+
   </body>
 </html>
