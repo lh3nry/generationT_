@@ -8,12 +8,15 @@ random.seed()
 # from Crypto import Random
 # from Crypto.Random import random
 
-vowels = ('a','e','i','o','u')
+# vowels = ('a','e','i','o','u','A','E','I','O','U')
+# phony = ( 'b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l',
+#          'm', 'n',  'p', 'r', 's', 't', 'v', 'w', 'x', 'y',
+#          'z','B', 'C', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'R', 'S', 'T', 'V', 'W', 'X', 'Y', 'Z')
+         # , 'ch', 'gh', 'ph', 'rh', 'sh', 'th', 'wh', 'qu', 'ck')
+vowels = ('a','e','i','o','u',)
 phony = ( 'b', 'c', 'd', 'f', 'g', 'h',  'j', 'k', 'l',
          'm', 'n',  'p', 'r', 's', 't',  'v', 'w', 'x', 'y',
          'z')
-         # , 'ch', 'gh', 'ph', 'rh', 'sh', 'th', 'wh', 'qu', 'ck')
-
 
 class Tetris(wx.Frame):
     def __init__(self, parent, id, title):
@@ -442,8 +445,8 @@ class Shape(object):
         return m
 
     def rotatedLeft(self):
-        if self.pieceShape == Tetrominoes.SquareShape:
-            return self
+        # if self.pieceShape == Tetrominoes.SquareShape:
+        #     return self
 
         result = Shape()
         result.pieceText = self.pieceText
@@ -455,8 +458,8 @@ class Shape(object):
         return result
 
     def rotatedRight(self):
-        if self.pieceShape == Tetrominoes.SquareShape:
-            return self
+        # if self.pieceShape == Tetrominoes.SquareShape:
+        #     return self
 
         result = Shape()
         result.pieceText = self.pieceText
@@ -469,5 +472,5 @@ class Shape(object):
 
 
 app = wx.App()
-Tetris(None, -1, 'Tetris')
+Tetris(None, -1, 'Generation T')
 app.MainLoop()
