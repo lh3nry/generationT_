@@ -4,6 +4,7 @@
 
 import wx
 import random
+random.seed()
 # from Crypto import Random
 # from Crypto.Random import random
 
@@ -231,8 +232,12 @@ class Board(wx.Panel):
             numFullLines = numFullLines + len(rowsToRemove)
 
             if numFullLines > 0:
+                x = self.boardtxt[m * Board.BoardWidth : m * Board.BoardWidth + Board.BoardWidth]
+                self.boardtxt = self.boardtxt[0:m * Board.BoardWidth] + self.boardtxt[m * Board.BoardWidth + Board.BoardWidth:] + ['0' for _ in range(10)]
+                xx = ''.join(x)
+                print xx
                 self.numLinesRemoved = self.numLinesRemoved + numFullLines
-                statusbar.SetStatusText(str(self.numLinesRemoved))
+                statusbar.SetStatusText(str(self.numLinesRemoved)+': '+xx)
                 self.isWaitingAfterLine = True
                 self.curPiece.setShape(Tetrominoes.NoShape)
                 self.Refresh()
@@ -242,6 +247,7 @@ class Board(wx.Panel):
         self.curPiece = self.nextPiece
         statusbar = self.GetParent().statusbar
         self.nextPiece.setRandomShape()
+        self.nextPiece.pieceText = [self.nextPiece.genPhonym() for _ in range(4)]
         self.curX = Board.BoardWidth / 2 + 1
         self.curY = Board.BoardHeight - 1 + self.curPiece.minY()
 
@@ -372,12 +378,14 @@ class Shape(object):
     def __init__(self):
         self.coords = [[0,0] for i in range(4)]
         self.pieceShape = Tetrominoes.NoShape
-        self.pieceText = ('1','2','3','4')
-
+        self.pieceText = [self.genPhonym() for _ in range(4)]
         self.setShape(Tetrominoes.NoShape)
 
     def shape(self):
         return self.pieceShape
+
+    def genPhonym(self):
+        return phony[random.randint(0, len(phony)-1)]+vowels[random.randint(0, len(vowels)-1)]
 
     def text(self):
         return self.pieceText
@@ -438,6 +446,7 @@ class Shape(object):
             return self
 
         result = Shape()
+        result.pieceText = self.pieceText
         result.pieceShape = self.pieceShape
         for i in range(4):
             result.setX(i, self.y(i))
@@ -450,6 +459,7 @@ class Shape(object):
             return self
 
         result = Shape()
+        result.pieceText = self.pieceText
         result.pieceShape = self.pieceShape
         for i in range(4):
             result.setX(i, -self.y(i))
