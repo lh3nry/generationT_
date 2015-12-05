@@ -2,6 +2,7 @@ $(function() {
   var DOC_URL = 'https://script.google.com/macros/s/AKfycbxJNuhLFEtxvcDIk_u7WFNJZ2GFIG2mIeyijNgp_IbPjx9_kwD2/exec';
   var $advanceButtons = $('button.advance-button');
   var currentPhase = 0,
+      userHash = '',
       userPassword = '',
       tries = 0,
       timeTaken = 0;
@@ -26,7 +27,8 @@ $(function() {
   }
 
   function phase0() {
-    userPassword = $('#phase0 input')[0].value;
+    // userHash = $('#phase0 input')[0].value;
+    userHash = _getURLParameter('h');
   }
 
   function phase1() {
@@ -42,9 +44,10 @@ $(function() {
       tries++;
 
       var $input = $form.find('input');
-      if ($input[0].value == userPassword) {
+      if (md5($input[0].value) == userHash) {
         $input.removeClass('input--error');
         timeTaken = Date.now() - startTime;
+        userPassword = $input[0].value;
         postResults(function(result) {
           if (result.result == 'success') {
             advancePhase();
@@ -86,6 +89,16 @@ $(function() {
     .done(function(result) {
       cb(result);
     });
+  }
+
+  function _getURLParameter(param) {
+    var url = window.location.search.substring(1);
+    var variables = url.split('&');
+
+    for (var i = 0; i < variables.length; i++) {
+      var paramName = variables[i].split('=');
+      if (paramName[0] == param) return paramName[1];
+    }
   }
 
   function init() {
