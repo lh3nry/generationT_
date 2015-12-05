@@ -81,6 +81,7 @@ $(function() {
   function postResults(cb) {
     data = {
       'password': userPassword,
+      'password_hash': userHash,
       'test2_tries': tries,
       'test2_time': timeTaken
     };
